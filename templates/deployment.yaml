@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ include "test-chart.fullname" . }}
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+
+  strategy:
+    type: RollingUpdate
+
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+
+  selector:
+    matchLabels:
+      app: {{ include "test-chart.name" . }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ include "test-chart.name" . }}
+        {{- toYaml .Values.podLabels | nindent 8 }}
+        
+      
+
+    spec:
+      serviceAccountName: {{ include "test-chart.fullname" . }}
+
+      containers:
+      - name: {{ include "test-chart.name" . }}
+
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+
+        envFrom:
+        - configMapRef:
+            name: {{ include "test-chart.fullname" . }}
+
+        env:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "test-chart.fullname" . }}
+              key: username
+
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "test-chart.fullname" . }}
+              key: password
+
+        {{- if .Values.persistence.enabled }}
+        volumeMounts:
+        - name: app-storage
+          mountPath: /data
+        {{- end }}
+
+        resources:
+{{ toYaml .Values.resources | nindent 10 }}
+          
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.targetPort }}
+
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: {{ .Values.service.targetPort }}
+
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+      {{- if .Values.persistence.enabled }}
+      volumes:
+      - name: app-storage
+        persistentVolumeClaim:
+          claimName: {{ include "test-chart.fullname" . }}-pvc
+      {{- end }}
