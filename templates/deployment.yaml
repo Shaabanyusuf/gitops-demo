@@ -61,6 +61,10 @@ spec:
           mountPath: /data
         {{- end }}
 
+        - name: nginx-html
+          mountPath: /usr/share/nginx/html
+          readOnly: true
+
         resources:
 {{ toYaml .Values.resources | nindent 10 }}
           
@@ -86,3 +90,7 @@ spec:
         persistentVolumeClaim:
           claimName: {{ include "test-chart.fullname" . }}-pvc
       {{- end }}
+      
+      - name: nginx-html
+        configMap:
+          name: {{ include "test-chart.fullname" . }}

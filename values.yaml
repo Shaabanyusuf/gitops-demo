@@ -47,6 +47,7 @@ config:
   APP_ENV: dev
   LOG_LEVEL: info
   PORT: "8080"
+  index.html: "Hi, I am Shaban"
 # ------------------------------
 
 secret:
