@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 3
 
 image:
   repository: nginx
@@ -39,8 +39,6 @@ resources:
 strategy:
   type: RollingUpdate
 
-
-
 #----------------------congigmap.yaml----------------------
 config:
   APP_NAME: myapp
@@ -61,7 +59,6 @@ persistence:
   accessMode: ReadWriteOnce
   size: 1Gi
 
-
 # -----------------------
 
 autoscaling:
@@ -70,12 +67,10 @@ autoscaling:
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
 
-
   # ---------------------
 serviceAccount:
   create: true
   name: ""
-
 
 podLabels:
   environment: dev

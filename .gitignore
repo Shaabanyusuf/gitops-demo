@@ -1,0 +1,16 @@
+# Kubernetes
+*.kubeconfig
+kubeconfig
+
+# Secrets
+.env
+*.pem
+*.key
+*.crt
+
+# VS Code
+.vscode/
+
+# Terraform
+.terraform/
+*.tfstate*
