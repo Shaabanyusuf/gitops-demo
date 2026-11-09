@@ -15,4 +15,4 @@ kubeconfig
 .terraform/
 *.tfstate*
 
-chart01-0.1.0.tgz
+*.tgz
