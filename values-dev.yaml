@@ -1,0 +1,78 @@
+replicaCount: 3
+
+image:
+  repository: nginx
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+ingress:
+  enabled: false
+  host: app.local
+
+config:
+  APP_NAME: myapp
+  APP_ENV: dev
+
+secret:
+  username: admin
+  password: admin123
+
+persistence:
+  enabled: true
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+  limits:
+    cpu: 500m
+    memory: 512Mi
+strategy:
+  type: RollingUpdate
+
+#----------------------congigmap.yaml----------------------
+config:
+  APP_NAME: myapp
+  APP_ENV: dev
+  LOG_LEVEL: info
+  PORT: "8080"
+# ------------------------------
+
+secret:
+  username: admin
+  password: admin123
+  apiKey: my-secret-key
+
+# ------------------------
+persistence:
+  enabled: false
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+# -----------------------
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+  # ---------------------
+serviceAccount:
+  create: true
+  name: ""
+
+podLabels:
+  environment: dev
+  team: devops
+  owner: shabaan
