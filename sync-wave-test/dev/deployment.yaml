@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sync-wave-demo
+  namespace: dev
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sync-wave-demo
+  template:
+    metadata:
+      labels:
+        app: sync-wave-demo
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: sync-wave-demo
+                  key: message
