@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invalid-deployment-demo
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: invalid-demo
+  template:
+    metadata:
+      labels:
+        app: wrong-label
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
