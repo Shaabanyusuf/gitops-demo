@@ -12,6 +12,17 @@ spec:
     chart: loki-stack
     targetRevision: 2.10.2
 
+    helm:
+      values: |
+        promtail:
+          config:
+            snippets:
+              extraRelabelConfigs:
+                - action: keep
+                  source_labels:
+                    - __meta_kubernetes_namespace
+                  regex: argocd|monitoring|dev|staging|prod
+
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
