@@ -9,8 +9,8 @@ spec:
 
   source:
     repoURL: https://grafana.github.io/helm-charts
-    chart: loki
-    targetRevision: 6.40.0
+    chart: loki-stack
+    targetRevision: 2.10.2
 
   destination:
     server: https://kubernetes.default.svc
